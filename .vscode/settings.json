@@ -1,0 +1,25 @@
+{
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "/opt/devkitpro/libgba/include/**",
+        "/opt/devkitpro/libtonc/include/**",
+        "/opt/devkitpro/devkitARM/include/**",
+        "/opt/devkitpro/devkitARM/arm-none-eabi/include/**"
+    ],
+    "C_Cpp.default.defines": [
+        "ARM9"
+    ],
+    "C_Cpp.default.compilerPath": "/opt/devkitpro/devkitARM/bin/arm-none-eabi-gcc",
+    "C_Cpp.default.intelliSenseMode": "macos-gcc-x64",
+    "files.associations": {
+        "tonc.h": "c",
+        "tonc_surface.h": "c",
+        "tonc_input.h": "c",
+        "tonc_core.h": "c",
+        "tonc_bios.h": "c",
+        "tonc_memdef.h": "c",
+        "tonc_memmap.h": "c",
+        "tonc_types.h": "c",
+        "metr.h": "c"
+    },
+}
