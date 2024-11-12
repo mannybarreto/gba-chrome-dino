@@ -20,6 +20,9 @@
         "tonc_memdef.h": "c",
         "tonc_memmap.h": "c",
         "tonc_types.h": "c",
-        "metr.h": "c"
+        "metr.h": "c",
+        "character.h": "c",
+        "string.h": "c",
+        "gba_console.h": "c"
     },
 }
