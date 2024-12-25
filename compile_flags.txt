@@ -1,0 +1,6 @@
+-Ibuild
+-I/opt/devkitpro/libtonc/include
+-I/opt/devkitpro/libgba/include
+-I/opt/devkitpro/devkitARM/include
+-I/opt/devkitpro/devkitARM/arm-none-eabi/include
+-DARM9
