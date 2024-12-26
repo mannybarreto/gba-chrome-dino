@@ -1,4 +1,6 @@
 #
 # Metroid : 4bpp, not compressed. Only use the first 64 columns.
 #
--gt -gB4
+-width 256
+-height 288
+-gB4

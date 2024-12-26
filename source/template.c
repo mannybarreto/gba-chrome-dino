@@ -9,7 +9,7 @@ OBJ_AFFINE *object_affine_buffer = (OBJ_AFFINE *)object_buffer;
 
 void render_character() {
   int x = 96, y = 32;
-  u32 tile_id = 2, pal_bank = 0;
+  u32 tile_id = 0, pal_bank = 0;
 
   // Dereference the first object in the buffer.
   OBJ_ATTR *character = &object_buffer[0];
