@@ -7,27 +7,43 @@
 OBJ_ATTR object_buffer[128];
 OBJ_AFFINE *object_affine_buffer = (OBJ_AFFINE *)object_buffer;
 
+u32 row = 0;
+u32 col = 0;
+
+void accept_input() {
+  if (key_hit(KEY_R)) {
+    col = col + 1;
+  }
+  if (key_hit(KEY_L)) {
+    col = col - 1;
+  }
+  if (key_hit(KEY_A)) {
+    row = row + 1;
+  }
+  if (key_hit(KEY_B)) {
+    row = row - 1;
+  }
+}
+
 void render_character() {
   int x = 96, y = 32;
-  u32 tile_id = 0, pal_bank = 0;
+  u32 pal_bank = 0;
 
   // Dereference the first object in the buffer.
   OBJ_ATTR *character = &object_buffer[0];
 
+  u32 index = (col * 16);
+
   // Easy object initializer
-  obj_set_attr(
-      character,
-      ATTR0_SQUARE | ATTR0_4BPP,        // Square sprites...
-      ATTR1_SIZE_32,                    // of size 32x32p...
-      ATTR2_BUILD(tile_id, pal_bank, 1) // from palbank 0, and tile index 0.
+  obj_set_attr(character,
+               ATTR0_SQUARE | ATTR0_4BPP, // Square sprites...
+               ATTR1_SIZE_32,             // of size 32x32p...
+               ATTR2_BUILD(index, pal_bank,
+                           1) // from palbank 0, and tile index 0.
   );
 
   // Position sprite.
   obj_set_pos(character, x, y);
-
-  // Wait for vblank.
-  vid_vsync();
-
   oam_copy(oam_mem, object_buffer, 1); // Update the object buffer.
 }
 
@@ -48,12 +64,14 @@ int main(void) {
   // Enabling sprites in the display control.
   REG_DISPCNT =
       DCNT_OBJ |
-      DCNT_OBJ_2D; // Enables rendering of sprites & Object mapping mode.
+      DCNT_OBJ_1D; // Enables rendering of sprites & Object mapping mode.
 
-  render_character();
-
-  while (1)
-    ;
+  while (1) {
+    vid_vsync();
+    key_poll();
+    accept_input();
+    render_character();
+  }
 
   return 0;
 }
