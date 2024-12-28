@@ -1,4 +1,4 @@
-#include "character.h"
+#include "dino.h"
 #include <string.h>
 #include <tonc.h>
 
@@ -32,13 +32,11 @@ void render_character() {
   // Dereference the first object in the buffer.
   OBJ_ATTR *character = &object_buffer[0];
 
-  u32 index = (col * 16);
-
   // Easy object initializer
   obj_set_attr(character,
                ATTR0_SQUARE | ATTR0_4BPP, // Square sprites...
                ATTR1_SIZE_32,             // of size 32x32p...
-               ATTR2_BUILD(index, pal_bank,
+               ATTR2_BUILD(col, pal_bank,
                            1) // from palbank 0, and tile index 0.
   );
 
@@ -55,8 +53,8 @@ int main(void) {
   // Sprites are placed in block 4 (lower) and 5 (higher).
   // Place the glyphs of the 4bpp boxed character sprite into LOW obj memory
   // (cbb == 4).
-  memcpy(&tile_mem[4][0], characterTiles, characterTilesLen);
-  memcpy(pal_obj_mem, characterPal, characterPalLen);
+  memcpy(&tile_mem[4][0], dinoTiles, dinoTilesLen);
+  memcpy(pal_obj_mem, dinoPal, dinoPalLen);
 
   // Hide all the sprites.
   oam_init(object_buffer, 128);

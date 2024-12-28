@@ -1,8 +1,0 @@
-#
-# 4bpp, not compressed.
-#
--width 256
--height 288
--gB4
--Mw 4
--Mh 4
