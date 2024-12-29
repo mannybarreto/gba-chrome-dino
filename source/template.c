@@ -20,6 +20,8 @@
 // Tile y in tiles.
 #define FLOOR_TY (SCREEN_TH - 1)
 
+// Gravity in pixels / frame^2
+
 // --- Globals ---
 
 // With 1024 bytes at our disposal in the OAM, we have room for 128 OBJ_ATTRs
@@ -30,9 +32,18 @@ OBJ_AFFINE *object_affine_buffer = (OBJ_AFFINE *)object_buffer;
 // Convert tile coordinates to pixel coordinates.
 int tile_to_pixel_coordinate(int tile) { return TILE_DIMENSION * tile; }
 
-void render_character() {
+// Y modifier for jump: y = v₀*t - ½*g*t²
+// y is the height, v₀ is the initial vertical velocity, g is the
+// acceleration due to gravity, and t is the time of flight.
+int calculate_y_for_jump(float initial_velocity, int frame) {
+  const float gravity = 0.15;
+  return initial_velocity * frame - 0.5f * gravity * frame * frame;
+}
+
+enum DinoState { Running, Jumping };
+
+void render_character(int y) {
   int x = 100;
-  int y = tile_to_pixel_coordinate(FLOOR_TY) - 32;
 
   // Dereference the first object in the buffer.
   OBJ_ATTR *character = &object_buffer[0];
@@ -56,6 +67,20 @@ void init_map() {
       sizeof(se_mat[SBB][FLOOR_TY]) / sizeof(se_mat[SBB][FLOOR_TY][0]);
   for (int i = 0; i < floor_width_tiles; i++) {
     se_mat[SBB][FLOOR_TY][i] = 1;
+  }
+}
+
+int state_for_input(int state) {
+  switch (state) {
+  case (Jumping): {
+    return Jumping;
+  }
+  default: {
+    if (key_hit(KEY_A)) {
+      return Jumping;
+    }
+    return Running;
+  }
   }
 }
 
@@ -86,11 +111,36 @@ int main(void) {
 
   init_map();
 
+  int character_floor_position = tile_to_pixel_coordinate(FLOOR_TY) - 32;
+  int frames_in_state = 0;
+  int dino_state = Running;
+  int y = character_floor_position;
   while (1) {
     vid_vsync();
+
+    // Accept input
     key_poll();
-    // accept_input();
-    render_character();
+    int state_for_key = state_for_input(dino_state);
+
+    // Update
+    if (dino_state != state_for_key) {
+      dino_state = state_for_key;
+      frames_in_state = 1;
+    } else {
+      frames_in_state++;
+    }
+
+    if (dino_state == Jumping) {
+      y -= calculate_y_for_jump(1.1, frames_in_state);
+
+      if (y >= character_floor_position) {
+        y = character_floor_position;
+        dino_state = Running;
+      }
+    }
+
+    // Render
+    render_character(y);
   }
 
   return 0;
