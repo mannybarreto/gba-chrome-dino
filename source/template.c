@@ -40,8 +40,7 @@ int calculate_y_for_jump(float initial_velocity, int frame) {
 
 enum DinoState { Running, Jumping };
 
-void render_character(int y) {
-  int x = 100;
+void render_character(int x, int y) {
 
   // Dereference the first object in the buffer.
   OBJ_ATTR *character = &object_buffer[0];
@@ -109,12 +108,16 @@ int main(void) {
 
   init_map();
 
-  int character_floor_position = tile_to_pixel_coordinate(FLOOR_TY) - 32;
   int frames_in_state = 1;
   int dino_state = Running;
+
+  int x = 100;
+  int character_floor_position = tile_to_pixel_coordinate(FLOOR_TY) - 32;
   int y = character_floor_position;
+
+  float scroll_velocity = 0.5;
+  float scroll_offset = 0;
   while (1) {
-    vid_vsync();
 
     // Accept input
     key_poll();
@@ -138,8 +141,12 @@ int main(void) {
       }
     }
 
+    scroll_offset += scroll_velocity;
+
     // Render
-    render_character(y);
+    vid_vsync();
+    render_character(x, y);
+    REG_BG0HOFS = scroll_offset;
   }
 
   return 0;
