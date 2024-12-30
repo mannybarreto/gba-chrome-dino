@@ -154,7 +154,8 @@ int main(void) {
     render_character(x, y);
     REG_BG0HOFS = scroll_offset;
 
-    // Dereference the second object in the buffer.
+    // TODO: Create a vector of these we can move through and translate as
+    // needed.
     OBJ_ATTR *cactus = &object_buffer[1];
 
     obj_set_attr(cactus,
