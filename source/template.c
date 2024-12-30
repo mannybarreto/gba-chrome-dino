@@ -36,7 +36,7 @@ int tile_to_pixel_coordinate(int tile) { return TILE_DIMENSION * tile; }
 // y is the height, v₀ is the initial vertical velocity, g is the
 // acceleration due to gravity, and t is the time of flight.
 int calculate_y_for_jump(float initial_velocity, int frame) {
-  const float gravity = 0.15;
+  const float gravity = 0.12;
   return initial_velocity * frame - 0.5f * gravity * frame * frame;
 }
 
