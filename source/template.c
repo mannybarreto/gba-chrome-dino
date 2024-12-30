@@ -1,4 +1,6 @@
+#include "cacti.h"
 #include "dino.h"
+#include "tonc_memdef.h"
 #include "world.h"
 #include <string.h>
 #include <tonc.h>
@@ -45,7 +47,6 @@ void render_character(int x, int y) {
   // Dereference the first object in the buffer.
   OBJ_ATTR *character = &object_buffer[0];
 
-  // Easy object initializer
   obj_set_attr(character,
                ATTR0_SQUARE | ATTR0_4BPP | ATTR0_Y(0), // Square sprites...
                ATTR1_SIZE_32,                          // of size 32x32p...
@@ -55,7 +56,6 @@ void render_character(int x, int y) {
 
   // Position sprite.
   obj_set_pos(character, x, y);
-  oam_copy(oam_mem, object_buffer, 1); // Update the object buffer.
 }
 
 void init_map() {
@@ -98,6 +98,9 @@ int main(void) {
   memcpy(&tile_mem[4][0], dinoTiles, dinoTilesLen);
   memcpy(pal_obj_mem, dinoPal, dinoPalLen);
 
+  memcpy(&tile_mem[5][0], cactiTiles, cactiTilesLen);
+  memcpy(pal_obj_mem + dinoPalLen, cactiPal, cactiPalLen);
+
   // Hide all the sprites.
   oam_init(object_buffer, OAM_BUFFER_SIZE);
 
@@ -112,13 +115,16 @@ int main(void) {
   int dino_state = Running;
 
   int x = 100;
-  int character_floor_position = tile_to_pixel_coordinate(FLOOR_TY) - 32;
-  int y = character_floor_position;
+  int floor_y = tile_to_pixel_coordinate(FLOOR_TY) - 32;
+  int y = floor_y;
 
   float scroll_velocity = 0.5;
   float scroll_offset = 0;
-  while (1) {
+  int z = 0;
 
+  // There's probably a better constant for this?
+  int cactus_tile_index = sizeof(tile_mem[4]) / sizeof(tile_mem[4][0]);
+  while (1) {
     // Accept input
     key_poll();
     int state_for_key = state_for_input(dino_state);
@@ -135,8 +141,8 @@ int main(void) {
       y -= calculate_y_for_jump(1.1, frames_in_state);
 
       // Reset the state once we hit the floor.
-      if (y >= character_floor_position) {
-        y = character_floor_position;
+      if (y >= floor_y) {
+        y = floor_y;
         dino_state = Running;
       }
     }
@@ -147,6 +153,20 @@ int main(void) {
     vid_vsync();
     render_character(x, y);
     REG_BG0HOFS = scroll_offset;
+
+    // Dereference the second object in the buffer.
+    OBJ_ATTR *cactus = &object_buffer[1];
+
+    obj_set_attr(cactus,
+                 ATTR0_TALL | ATTR0_4BPP | ATTR0_Y(0), // Rectangle sprite...
+                 ATTR1_SIZE_16x32,                     // of size 16x32p...
+                 ATTR2_BUILD(cactus_tile_index, /*palbank=*/0,
+                             /*prio=*/0) // from palbank 0, and tile index 0.
+    );
+
+    // Position sprite.
+    obj_set_pos(cactus, x + 40, floor_y);
+    oam_copy(oam_mem, object_buffer, 2); // Update the object buffer.
   }
 
   return 0;

@@ -1,0 +1,6 @@
+#
+# 4bpp, not compressed.
+#
+-gB4
+-aw16
+-ah32
