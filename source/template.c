@@ -20,8 +20,6 @@
 // Tile y in tiles.
 #define FLOOR_TY (SCREEN_TH - 1)
 
-// Gravity in pixels / frame^2
-
 // --- Globals ---
 
 // With 1024 bytes at our disposal in the OAM, we have room for 128 OBJ_ATTRs
@@ -112,7 +110,7 @@ int main(void) {
   init_map();
 
   int character_floor_position = tile_to_pixel_coordinate(FLOOR_TY) - 32;
-  int frames_in_state = 0;
+  int frames_in_state = 1;
   int dino_state = Running;
   int y = character_floor_position;
   while (1) {
@@ -133,6 +131,7 @@ int main(void) {
     if (dino_state == Jumping) {
       y -= calculate_y_for_jump(1.1, frames_in_state);
 
+      // Reset the state once we hit the floor.
       if (y >= character_floor_position) {
         y = character_floor_position;
         dino_state = Running;
