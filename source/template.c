@@ -68,7 +68,7 @@ int main(void) {
     render_object_at_position(dinosaur.attributes, dinosaur.position);
 
     // Position sprite.
-    obj_set_pos(cactus, dinosaur.position.x + 40, FLOOR_Y - 32);
+    obj_set_pos(cactus, dinosaur.position.x + 40, FLOOR_Y - 30);
     oam_copy(oam_mem, object_buffer, 2); // Update the object buffer.
   }
 

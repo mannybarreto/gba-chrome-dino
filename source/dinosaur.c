@@ -7,7 +7,7 @@
 #include "tonc_video.h"
 #include "world.h"
 
-#define DINO_BASE_Y (FLOOR_Y - 32)
+#define DINO_BASE_Y (FLOOR_Y - 24 - 2)
 
 int state_for_input(int state) {
   switch (state) {
@@ -54,7 +54,7 @@ struct Dinosaur init_dino(void) {
 // y is the height, v₀ is the initial vertical velocity, g is the
 // acceleration due to gravity, and t is the time of flight.
 static int calculate_y_for_jump(float initial_velocity, int frame) {
-  const float gravity = 0.111;
+  const float gravity = 0.123;
   return initial_velocity * frame - 0.5f * gravity * frame * frame;
 }
 
