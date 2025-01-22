@@ -8,20 +8,7 @@
 #include "world.h"
 
 #define DINO_BASE_Y (FLOOR_Y - 24 - 2)
-
-int state_for_input(int state) {
-  switch (state) {
-  case (Jumping): {
-    return Jumping;
-  }
-  default: {
-    if (key_hit(KEY_A)) {
-      return Jumping;
-    }
-    return Running;
-  }
-  }
-}
+#define INITIAL_VELOCITY 1.1
 
 struct Dinosaur init_dino(void) {
   struct Dinosaur dino;
@@ -50,12 +37,26 @@ struct Dinosaur init_dino(void) {
   return dino;
 };
 
+static int state_for_input(int state) {
+  switch (state) {
+  case (Jumping): {
+    return Jumping;
+  }
+  default: {
+    if (key_hit(KEY_A)) {
+      return Jumping;
+    }
+    return Running;
+  }
+  }
+}
+
 // Y modifier for jump: y = v₀*t - ½*g*t²
 // y is the height, v₀ is the initial vertical velocity, g is the
 // acceleration due to gravity, and t is the time of flight.
-static int calculate_y_for_jump(float initial_velocity, int frame) {
+static int calculate_y_for_jump(int frame) {
   const float gravity = 0.123;
-  return initial_velocity * frame - 0.5f * gravity * frame * frame;
+  return INITIAL_VELOCITY * frame - 0.5f * gravity * frame * frame;
 }
 
 void update_dino(struct Dinosaur *dino) {
@@ -68,7 +69,7 @@ void update_dino(struct Dinosaur *dino) {
   }
 
   if (dino->state == Jumping) {
-    dino->position.y -= calculate_y_for_jump(1.1, dino->frames_in_state);
+    dino->position.y -= calculate_y_for_jump(dino->frames_in_state);
 
     // Reset the state once we hit the floor.
     if (dino->position.y >= DINO_BASE_Y) {
@@ -76,4 +77,9 @@ void update_dino(struct Dinosaur *dino) {
       dino->state = Running;
     }
   }
+
+  // Update animation.
+
+  ATTR2_BUILD(0, /*palbank=*/0,
+              /*prio=*/0);
 }
