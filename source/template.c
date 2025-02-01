@@ -39,6 +39,8 @@ int main(void) {
                            /*prio=*/0) // from palbank 0, and tile index 0.
   );
   while (1) {
+    vid_vsync();
+
     // Accept input
     key_poll();
 
@@ -47,7 +49,6 @@ int main(void) {
     update_dino(&dinosaur);
 
     // Render
-    vid_vsync();
     REG_BG0HOFS = scroll_offset;
 
     render_object_at_position(dinosaur.attributes, dinosaur.position);
