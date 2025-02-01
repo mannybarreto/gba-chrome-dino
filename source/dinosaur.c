@@ -7,7 +7,7 @@
 #include "tonc_video.h"
 #include "world.h"
 
-#define DINO_BASE_Y (FLOOR_Y - 24 - 2)
+#define DINO_BASE_Y (FLOOR_Y - 22)
 #define INITIAL_VELOCITY 1.1
 
 struct Dinosaur init_dino(void) {

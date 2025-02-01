@@ -1,4 +1,3 @@
-#include "background.h"
 #include "cacti.h"
 #include "dino.h"
 #include "dinosaur.h"
@@ -14,15 +13,6 @@
 #define SBB 31
 
 int main(void) {
-  // Setting up the tiles:
-  memcpy(pal_bg_mem, backgroundPal, backgroundPalLen);
-  memcpy(&tile_mem[0][0], backgroundTiles, backgroundTilesLen);
-
-  // set up BG0 for a 4bpp 32x32t map, using
-  //   using charblock 0 and screenblock 31
-  REG_BG0CNT = BG_CBB(0) | BG_SBB(SBB) | BG_4BPP | BG_REG_32x32;
-  REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
-
   memcpy(&tile_mem[5][0], cactiTiles, cactiTilesLen);
   memcpy(pal_obj_mem + dinoPalLen, cactiPal, cactiPalLen);
 
@@ -35,9 +25,10 @@ int main(void) {
       DCNT_OBJ_1D; // Enables rendering of sprites & Object mapping mode.
 
   init_world(SBB);
+
   struct Dinosaur dinosaur = init_dino();
 
-  float scroll_velocity = 0.5;
+  float scroll_velocity = 1;
   float scroll_offset = 0;
 
   // TODO: Create a vector of these we can move through and translate as
@@ -68,7 +59,7 @@ int main(void) {
     render_object_at_position(dinosaur.attributes, dinosaur.position);
 
     // Position sprite.
-    obj_set_pos(cactus, dinosaur.position.x + 40, FLOOR_Y - 30);
+    obj_set_pos(cactus, dinosaur.position.x + 40, FLOOR_Y - 26);
     oam_copy(oam_mem, object_buffer, 2); // Update the object buffer.
   }
 
