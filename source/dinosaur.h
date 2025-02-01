@@ -13,6 +13,9 @@ struct Dinosaur {
   int frames_in_state;
 
   struct Position position;
+
+  int frames_in_sprite;
+  int sprite_index;
 };
 
 struct Dinosaur init_dino(void);

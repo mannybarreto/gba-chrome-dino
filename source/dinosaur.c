@@ -3,7 +3,7 @@
 #include <string.h>
 #include <tonc.h>
 
-#include "dino.h"
+#include "sprites.h"
 #include "tonc_video.h"
 #include "world.h"
 
@@ -13,8 +13,8 @@
 struct Dinosaur init_dino(void) {
   struct Dinosaur dino;
 
-  memcpy(&tile_mem[4][0], dinoTiles, dinoTilesLen);
-  memcpy(pal_obj_mem, dinoPal, dinoPalLen);
+  memcpy(&tile_mem[4][0], spritesTiles, spritesTilesLen);
+  memcpy(pal_obj_mem, spritesPal, spritesPalLen);
 
   // Dereference the first object in the buffer.
   OBJ_ATTR *object_attributes = &object_buffer[0];
@@ -28,6 +28,9 @@ struct Dinosaur init_dino(void) {
 
   dino.state = Running;
   dino.frames_in_state = 1;
+
+  dino.sprite_index = 0;
+  dino.frames_in_sprite = 1;
 
   struct Position position;
   position.x = (SCREEN_WIDTH / 2) - 16;
@@ -78,8 +81,15 @@ void update_dino(struct Dinosaur *dino) {
     }
   }
 
+  if (dino->frames_in_sprite >= 10) {
+    dino->frames_in_sprite = 0;
+    dino->sprite_index += 1;
+    if (dino->sprite_index == 3) {
+      dino->sprite_index = 0;
+    }
+  }
   // Update animation.
-
-  ATTR2_BUILD(0, /*palbank=*/0,
-              /*prio=*/0);
+  dino->attributes->attr2 = ATTR2_BUILD(dino->sprite_index * 16, /*palbank=*/0,
+                                        /*prio=*/0);
+  dino->frames_in_sprite++;
 }
