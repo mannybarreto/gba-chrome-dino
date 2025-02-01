@@ -1,7 +1,23 @@
 #include "world.h"
-#include <stdlib.h>
 
-void init_world(int SBB) {
+#include <stdlib.h>
+#include <string.h>
+
+#include "background.h"
+
+// Main screenblock.
+#define SBB 31
+
+void init_world(void) {
+  // Setting up the tiles:
+  memcpy(pal_bg_mem, backgroundPal, backgroundPalLen);
+  memcpy(&tile_mem[0][0], backgroundTiles, backgroundTilesLen);
+
+  // set up BG0 for a 4bpp 32x32t map, using
+  //   using charblock 0 and screenblock 31
+  REG_BG0CNT = BG_CBB(0) | BG_SBB(SBB) | BG_4BPP | BG_REG_32x32;
+  REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+
   // Calculate the width of the screenblock matrix row in tiles.
   int floor_width_tiles =
       sizeof(se_mat[SBB][FLOOR_TY]) / sizeof(se_mat[SBB][FLOOR_TY][0]);

@@ -1,4 +1,3 @@
-#include "background.h"
 #include "cacti.h"
 #include "dino.h"
 #include "dinosaur.h"
@@ -8,20 +7,8 @@
 #include <string.h>
 #include <tonc.h>
 
-// --- Constants ---
-
-// Main screenblock.
-#define SBB 31
-
 int main(void) {
-  // Setting up the tiles:
-  memcpy(pal_bg_mem, backgroundPal, backgroundPalLen);
-  memcpy(&tile_mem[0][0], backgroundTiles, backgroundTilesLen);
-
-  // set up BG0 for a 4bpp 32x32t map, using
-  //   using charblock 0 and screenblock 31
-  REG_BG0CNT = BG_CBB(0) | BG_SBB(SBB) | BG_4BPP | BG_REG_32x32;
-  REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
+  init_world();
 
   memcpy(&tile_mem[5][0], cactiTiles, cactiTilesLen);
   memcpy(pal_obj_mem + dinoPalLen, cactiPal, cactiPalLen);
@@ -33,8 +20,6 @@ int main(void) {
   REG_DISPCNT |=
       DCNT_OBJ |
       DCNT_OBJ_1D; // Enables rendering of sprites & Object mapping mode.
-
-  init_world(SBB);
   struct Dinosaur dinosaur = init_dino();
 
   float scroll_velocity = 0.5;

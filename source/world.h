@@ -8,5 +8,5 @@
 #define FLOOR_Y (8 * FLOOR_TY)
 
 // Initializes tiles representing the world in provided screen block
-extern void init_world(int SBB);
+extern void init_world();
 #endif // WORLD_H
