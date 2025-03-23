@@ -22,7 +22,7 @@ int main(void) {
       DCNT_OBJ_1D; // Enables rendering of sprites & Object mapping mode.
   struct Dinosaur dinosaur = init_dino();
 
-  float scroll_velocity = 0.5;
+  float scroll_velocity = 1;
   float scroll_offset = 0;
 
   // TODO: Create a vector of these we can move through and translate as
@@ -38,6 +38,10 @@ int main(void) {
                ATTR2_BUILD(cactus_tile_index, /*palbank=*/0,
                            /*prio=*/0) // from palbank 0, and tile index 0.
   );
+  struct Position cactus_position;
+  cactus_position.x = 300;
+  cactus_position.y = FLOOR_Y - 26;
+
   while (1) {
     vid_vsync();
 
@@ -46,6 +50,8 @@ int main(void) {
 
     // Update
     scroll_offset += scroll_velocity;
+
+    cactus_position.x -= scroll_velocity;
     update_dino(&dinosaur);
 
     // Render
@@ -54,7 +60,7 @@ int main(void) {
     render_object_at_position(dinosaur.attributes, dinosaur.position);
 
     // Position sprite.
-    obj_set_pos(cactus, dinosaur.position.x + 40, FLOOR_Y - 26);
+    render_object_at_position(cactus, cactus_position);
     oam_copy(oam_mem, object_buffer, 2); // Update the object buffer.
   }
 
